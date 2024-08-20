@@ -9,7 +9,7 @@ export default defineConfig({
   // port needs to be a number but environment variables are always strings
   port: Number(process.env.DB_PORT),
   user: process.env.DB_USER,
-  // password: process.env.DB_PASSWORD
+  password: process.env.DB_PASSWORD,
   dbName: process.env.DB_NAME,
   debug: true,
   entitiesTs: ['src/**/*.entity.ts'],
