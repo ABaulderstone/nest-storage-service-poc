@@ -1,9 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  NotFoundException,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -18,17 +27,28 @@ export class UserController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    const foundUser = await this.userService.findOne(+id);
+    if (!foundUser) {
+      throw new NotFoundException('Could not find user with id ' + id);
+    }
+    return foundUser;
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+    const updatedUser = this.userService.update(+id, updateUserDto);
+    if (!updatedUser) {
+      throw new NotFoundException('Could not find user with id ' + id);
+    }
+    return updatedUser;
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  async remove(@Param('id') id: string) {
+    const isDeleted = await this.userService.remove(+id);
+    if (!isDeleted) {
+      throw new NotFoundException('Could not find user with id ' + id);
+    }
   }
 }
