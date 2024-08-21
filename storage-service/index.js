@@ -1,11 +1,12 @@
 const express = require('express');
 const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');
+const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
 
 const app = express();
-
+app.use(cors());
 const upload = multer({ dest: 'uploads/' });
 
 const uploadDir = path.join(__dirname, 'uploads');
@@ -14,8 +15,11 @@ if (!fs.existsSync(uploadDir)) {
 }
 
 app.use(express.json());
+app.get('/test', (req, res) => {
+  res.send('Hello, world');
+});
 
-app.post('mock-s3/upload', upload.single('file'), (req, res) => {
+app.post('/mock-s3/upload', upload.single('file'), (req, res) => {
   const file = req.file;
   const key = `${uuidv4()}-${file.originalname}`;
   const filePath = path.join(uploadDir, key);
@@ -23,7 +27,7 @@ app.post('mock-s3/upload', upload.single('file'), (req, res) => {
   res.json({ key });
 });
 
-app.get('mock-s3/presigned/:key', (req, res) => {
+app.get('/mock-s3/presigned/:key', (req, res) => {
   const { key } = req.params;
   const filePath = path.join(uploadDir, key);
   if (fs.existsSync(filePath)) {
@@ -32,7 +36,7 @@ app.get('mock-s3/presigned/:key', (req, res) => {
   return res.status(404).send('File not found');
 });
 
-app.get('mock-s3/download/:key', (req, res) => {
+app.get('/mock-s3/download/:key', (req, res) => {
   const { key } = req.params;
   const filePath = path.join(uploadDir, key);
   if (fs.existsSync(filePath)) {

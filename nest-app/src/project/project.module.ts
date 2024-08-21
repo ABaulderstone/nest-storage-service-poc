@@ -5,9 +5,10 @@ import { UserService } from '../user/user.service';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Project } from './entities/project.entity';
 import { UserModule } from '../user/user.module';
+import { StorageModule } from '../storage/storage.module';
 
 @Module({
-  imports: [UserModule, MikroOrmModule.forFeature([Project])],
+  imports: [UserModule, StorageModule, MikroOrmModule.forFeature([Project])],
   controllers: [ProjectController],
   providers: [ProjectService],
 })

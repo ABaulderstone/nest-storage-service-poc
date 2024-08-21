@@ -18,7 +18,8 @@ export class LocalStorageService implements StorageService {
     );
     return response.data.url;
   }
-  async upload(file: Express.Multer.File): Promise<unknown> {
+  async upload(file: Express.Multer.File) {
+    console.log(this.baseURL);
     const formData = new FormData();
     formData.append('file', new Blob([file.buffer]), file.originalname);
     const response = await lastValueFrom(

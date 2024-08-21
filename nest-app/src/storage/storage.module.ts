@@ -3,9 +3,12 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LocalStorageService } from './local-storage.service';
 import { S3StorageService } from './s3-storage.service';
+import { AttachmentService } from './attachment.service';
+import { MikroOrmModule } from '@mikro-orm/nestjs';
+import { Attachment } from './entities/attachement.entity';
 
 @Module({
-  imports: [ConfigModule, HttpModule],
+  imports: [ConfigModule, HttpModule, MikroOrmModule.forFeature([Attachment])],
   providers: [
     {
       provide: 'STORAGE_SERVICE',
@@ -17,7 +20,8 @@ import { S3StorageService } from './s3-storage.service';
       },
       inject: [ConfigService, HttpService],
     },
+    AttachmentService,
   ],
-  exports: [],
+  exports: [AttachmentService],
 })
 export class StorageModule {}

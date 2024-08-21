@@ -1,5 +1,14 @@
-import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
+import {
+  Collection,
+  Entity,
+  LoadStrategy,
+  ManyToOne,
+  OneToMany,
+  PrimaryKey,
+  Property,
+} from '@mikro-orm/core';
 import { User } from '../../user/entities/user.entity';
+import { Attachment } from '../../storage/entities/attachement.entity';
 
 @Entity({ tableName: 'projects' })
 export class Project {
@@ -14,4 +23,7 @@ export class Project {
 
   @ManyToOne({ entity: () => User })
   owner: User;
+
+  @Property({ persist: false })
+  screenshotUrls?: string[];
 }

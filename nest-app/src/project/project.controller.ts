@@ -8,26 +8,34 @@ import {
   Delete,
   BadRequestException,
   InternalServerErrorException,
-  HttpException,
-  HttpStatus,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { ServiceValidationError } from '../shared/exceptions/errors/ServiceValidation.error';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('projects')
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
   @Post()
-  async create(@Body() createProjectDto: CreateProjectDto) {
+  @UseInterceptors(FileInterceptor('file'))
+  async create(
+    @Body() createProjectDto: CreateProjectDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    console.log(createProjectDto);
+    console.log(file);
     try {
-      return await this.projectService.create(createProjectDto);
+      return await this.projectService.create(createProjectDto, file);
     } catch (e) {
       if (e instanceof ServiceValidationError) {
         throw new BadRequestException(e);
       }
+      console.log(e);
       throw new InternalServerErrorException('Oops something went wrong');
     }
   }

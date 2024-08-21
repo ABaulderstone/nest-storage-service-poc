@@ -7,14 +7,16 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { Project } from './entities/project.entity';
 import { EntityRepository } from '@mikro-orm/core';
 import { plainToInstance } from 'class-transformer';
+import { AttachmentService } from '../storage/attachment.service';
 
 @Injectable()
 export class ProjectService {
   constructor(
     @InjectRepository(Project) private readonly repo: EntityRepository<Project>,
     private readonly userService: UserService,
+    private readonly attachmentService: AttachmentService,
   ) {}
-  async create(createProjectDto: CreateProjectDto) {
+  async create(createProjectDto: CreateProjectDto, file: Express.Multer.File) {
     const validationError = new ServiceValidationError();
     const { ownerId, ...data } = createProjectDto;
     const foundUser = await this.userService.findOne(ownerId);
@@ -26,6 +28,7 @@ export class ProjectService {
     newProject.owner = foundUser;
     await this.repo.create(newProject);
     await this.repo.getEntityManager().persistAndFlush(newProject);
+    await this.attachmentService.create(file, 'Project', newProject.id);
     return newProject;
   }
 

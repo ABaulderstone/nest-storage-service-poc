@@ -2,11 +2,13 @@ import {
   Collection,
   Entity,
   OneToMany,
+  OneToOne,
   PrimaryKey,
   Property,
 } from '@mikro-orm/core';
 import { Project } from '../../project/entities/project.entity';
 import { Transform } from 'class-transformer';
+import { Attachment } from '../../storage/entities/attachement.entity';
 
 @Entity({ tableName: 'users' })
 export class User {
