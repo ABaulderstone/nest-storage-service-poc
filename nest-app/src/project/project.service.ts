@@ -28,7 +28,14 @@ export class ProjectService {
     newProject.owner = foundUser;
     await this.repo.create(newProject);
     await this.repo.getEntityManager().persistAndFlush(newProject);
-    await this.attachmentService.create(file, 'Project', newProject.id);
+    const attachment = await this.attachmentService.create(
+      file,
+      'Project',
+      newProject.id,
+    );
+    newProject.screenshotUrl = await this.attachmentService.getPresignedUrl(
+      attachment.key,
+    );
     return newProject;
   }
 
@@ -36,8 +43,20 @@ export class ProjectService {
     return `This action returns all project`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} project`;
+  async findOne(id: number) {
+    const foundProject = await this.repo.findOne(id);
+    if (!foundProject) {
+      return foundProject;
+    }
+    const attachement = await this.attachmentService.findOne(
+      'Project',
+      foundProject.id,
+    );
+    if (attachement) {
+      const url = await this.attachmentService.getPresignedUrl(attachement.key);
+      foundProject.screenshotUrl = url;
+    }
+    return foundProject;
   }
 
   update(id: number, updateProjectDto: UpdateProjectDto) {

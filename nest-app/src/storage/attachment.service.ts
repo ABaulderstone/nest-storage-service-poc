@@ -23,14 +23,20 @@ export class AttachmentService {
     const data = {
       key,
       mimeType: mimetype,
-      originalName: originalname
-        .replace(/\s+/g, '_')
-        .replace(/[(){}\[\]]/g, ''),
+      originalName: originalname,
       attachableType,
       attachableId,
     };
     const newAttachment = plainToInstance(Attachment, data);
     await this.repo.getEntityManager().persistAndFlush(newAttachment);
     return newAttachment;
+  }
+
+  findOne(attachableType: string, attachableId: number) {
+    return this.repo.findOne({ $and: [{ attachableId }, { attachableType }] });
+  }
+
+  getPresignedUrl(key: string) {
+    return this.storageService.getPresignedUrl(key);
   }
 }

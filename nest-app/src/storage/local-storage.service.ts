@@ -14,7 +14,7 @@ export class LocalStorageService implements StorageService {
 
   async getPresignedUrl(key: string): Promise<string> {
     const response = await lastValueFrom(
-      this.httpService.get(`${this.baseURL}/${key}`),
+      this.httpService.get(`${this.baseURL}/presigned/${key}`),
     );
     return response.data.url;
   }

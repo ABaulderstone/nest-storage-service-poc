@@ -25,5 +25,5 @@ export class Project {
   owner: User;
 
   @Property({ persist: false })
-  screenshotUrls?: string[];
+  screenshotUrl?: string;
 }
