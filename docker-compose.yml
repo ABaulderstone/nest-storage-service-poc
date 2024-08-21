@@ -30,6 +30,8 @@ services:
       - 3001:3001
     environment:
       - PORT=3001
+    volumes:
+      - ./storage-service/uploads:/app/uploads
     networks:
       - app-network
 
