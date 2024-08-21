@@ -1,7 +1,7 @@
 import { HttpStatus } from '@nestjs/common';
 
 export class ServiceValidationError extends Error {
-  public errors: Record<string, string[]>;
+  public readonly errors: Record<string, string[]>;
   public readonly statusCode: HttpStatus = HttpStatus.BAD_REQUEST;
 
   constructor(errors: Record<string, string[]> = {}) {
@@ -17,5 +17,13 @@ export class ServiceValidationError extends Error {
 
   get hasErrors(): boolean {
     return Object.keys(this.errors).length > 0;
+  }
+
+  toJSON() {
+    return {
+      statusCode: this.statusCode,
+      message: 'Validation failed in service',
+      errors: this.errors,
+    };
   }
 }
