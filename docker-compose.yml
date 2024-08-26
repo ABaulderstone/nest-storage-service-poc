@@ -11,14 +11,9 @@ services:
       - 8080:8080
     volumes:
       - ./nest-app:/app
-    environment:
-      - NODE_ENV=development
-      - DB_HOST=database
-      - DB_PORT=3306
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
-      - LOCAL_STORAGE_BASE_URL=http://storage:3001/mock-s3
+    env_file:
+      - ./.env
+
     networks:
       - app-network
 
@@ -37,11 +32,8 @@ services:
 
   database:
     image: mysql:latest
-    environment:
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${ROOT_PASSWORD}
+    env_file:
+      - ./.env
     ports:
       - '3307:3306'
     volumes:
