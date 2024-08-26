@@ -27,8 +27,6 @@ export class ProjectController {
     @Body() createProjectDto: CreateProjectDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    console.log(createProjectDto);
-    console.log(file);
     try {
       return await this.projectService.create(createProjectDto, file);
     } catch (e) {

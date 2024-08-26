@@ -39,8 +39,23 @@ export class ProjectService {
     return newProject;
   }
 
-  findAll() {
-    return `This action returns all project`;
+  async findAll() {
+    const projects = await this.repo.findAll();
+    const projectIds = projects.map((project) => project.id);
+    const attachments = await this.attachmentService.findMany(
+      'Project',
+      projectIds,
+    );
+    const keys = attachments.map((attachment) => attachment.key);
+    const presignedUrlMap =
+      await this.attachmentService.getManyPresignedUrls(keys);
+    projects.forEach((project) => {
+      const attachment = attachments.find((a) => a.attachableId === project.id);
+      if (attachment && presignedUrlMap[attachment.key]) {
+        project.screenshotUrl = presignedUrlMap[attachment.key].url;
+      }
+    });
+    return projects;
   }
 
   async findOne(id: number) {
