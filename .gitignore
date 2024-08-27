@@ -2,3 +2,4 @@
 storage-service/uploads
 db/mysql-data
 */node_modules
+.env.staging
