@@ -16,7 +16,7 @@ import { Attachment } from './entities/attachement.entity';
         const env = configService.get<string>('NODE_ENV', 'development');
         return env === 'development' || env === 'test'
           ? new LocalStorageService(httpService, configService)
-          : new S3StorageService();
+          : new S3StorageService(configService);
       },
       inject: [ConfigService, HttpService],
     },

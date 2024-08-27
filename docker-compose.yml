@@ -12,7 +12,7 @@ services:
     volumes:
       - ./nest-app:/app
     env_file:
-      - ./.env
+      - ./.env.staging
 
     networks:
       - app-network
@@ -33,7 +33,7 @@ services:
   database:
     image: mysql:latest
     env_file:
-      - ./.env
+      - ./.env.staging
     ports:
       - '3307:3306'
     volumes:
