@@ -4,7 +4,8 @@ import { Attachment } from './entities/attachement.entity';
 import { EntityRepository } from '@mikro-orm/mysql';
 import { StorageService } from './storage-service.interface';
 import { plainToInstance } from 'class-transformer';
-import { AttachableType, PresignedUrlMap } from './types';
+import { PresignedUrlMap } from './types';
+import { AttachableType } from './entities/attachement.entity';
 
 @Injectable()
 export class AttachmentService {

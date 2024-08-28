@@ -1,12 +1,5 @@
-import {
-  Collection,
-  Entity,
-  EntityManager,
-  ManyToMany,
-  ManyToOne,
-  PrimaryKey,
-  Property,
-} from '@mikro-orm/core';
+import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
+export type AttachableType = 'Project' | 'User';
 
 @Entity({ tableName: 'attachments' })
 export class Attachment {
@@ -22,7 +15,7 @@ export class Attachment {
   mimeType: string;
 
   @Property()
-  attachableType: string;
+  attachableType: AttachableType;
 
   @Property()
   attachableId: number;

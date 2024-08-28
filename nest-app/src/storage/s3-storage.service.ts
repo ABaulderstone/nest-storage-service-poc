@@ -27,6 +27,7 @@ export class S3StorageService implements StorageService {
     });
     return await getSignedUrl(this.s3Client, command, { expiresIn: 3600 });
   }
+  
   async upload(file: Express.Multer.File) {
     const key = `${Date.now()}-${file.originalname}`;
     const command = new PutObjectCommand({
